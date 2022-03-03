@@ -1,0 +1,1 @@
+A Python application to refer to a membership table and prefill data for registering into the MIS as a seminar report.
