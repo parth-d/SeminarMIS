@@ -6,7 +6,7 @@ from tkinter import *
 fileName = "membershipdatabase.csv"
 outputfileName = "misreport.csv"
 membershipDict = {}
-
+membershipDictNo = {}
 
 def initializeDict():
     # Dictionaries holding values
@@ -14,6 +14,7 @@ def initializeDict():
         reader = csv.reader(f)
         for row in reader:
             MembershipNo = row[3]
+            Contact = row[16]
             currentUser = {
                 'MembershipNo': row[3],
                 'Name': row[0] + " " + row[1] + " " + row[2],
@@ -28,6 +29,7 @@ def initializeDict():
                 'SubdueAmt': row[20]
             }
             membershipDict[MembershipNo] = currentUser
+            membershipDictNo[Contact] = currentUser
     return membershipDict
 
 def writetoCSV(dict):
@@ -143,7 +145,7 @@ def isMember():
     modex = StringVar()
     modex.set(' ')
 
-    def checkMember():
+    def checkMemberMid():
         if mID.get() not in membershipDict:
             box1 = Tk()
             box1.title("Error")
@@ -156,10 +158,30 @@ def isMember():
             Tk.destroy(secondScreen)
             registerMember(membershipDict[currentID])
 
+    def checkMemberMNo():
+        if mNo.get() not in membershipDictNo:
+            box1 = Tk()
+            box1.title("Error")
+            box1.geometry("300x100")
+            Label(box1, text = "Mob Number not found. Please try again.").grid(row = 0, column = 0)
+            Button(box1, text="Okay", command= lambda: Tk.destroy(box1)).grid(row = 1, column = 0)
+
+        else:
+            currentID = mNo.get()
+            Tk.destroy(secondScreen)
+            registerMember(membershipDictNo[currentID])
+
     Label(frame, text="Membership ID: ").grid(row = 0, column = 0)
     mID = Entry(frame)
     mID.grid(row = 0, column = 1)
-    Button(frame, text = 'Submit', command = checkMember).grid(row = 1, column = 0)
+    Button(frame, text = 'Submit', command = checkMemberMid).grid(row = 0, column = 2)
+
+    Label(frame, text="OR").grid(row=1, column=1)
+
+    Label(frame, text="Mob No: ").grid(row = 2, column = 0)
+    mNo = Entry(frame)
+    mNo.grid(row = 2, column = 1)
+    Button(frame, text = 'Submit', command = checkMemberMNo).grid(row = 2, column = 2)
 
     frame.pack(expand=1)
     secondScreen.mainloop()
