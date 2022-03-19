@@ -1,9 +1,11 @@
 import csv
 from datetime import date
 from tkinter import *
+from tkinter.filedialog import askopenfilename
 
 # Constants
-fileName = "membershipdatabase.csv"
+# fileName = "membershipdatabase.csv"
+fileName = askopenfilename(title="Select membership CSV")
 outputfileName = "misreport.csv"
 membershipDict = {}
 membershipDictNo = {}
@@ -20,7 +22,7 @@ def initializeDict():
                 'Name': row[0] + " " + row[1] + " " + row[2],
                 'Designation': row[5],
                 'Organization': row[6],
-                'address': row[7] + " " + row[8] + ", " + row[10] + "- " + row[9],
+                'Address': row[7] + " " + row[8] + ", " + row[10] + "- " + row[9],
                 'email': row[12],
                 'Contact': row[16],
                 'tel': row[17],
@@ -34,7 +36,7 @@ def initializeDict():
 
 def writetoCSV(dict):
     with open(outputfileName, 'a', encoding="utf-8-sig", newline='') as f:
-        header = ['Date','Category','MembershipNo','Name','Designation','Organization','OnAccountof','PaymentMode','Amount','Contact','Remarks']
+        header = ['Date','Category','MembershipNo','Name','Designation','Organization', 'Address','OnAccountof','PaymentMode','Amount','Contact','Remarks']
         writer = csv.DictWriter(f, fieldnames = header, extrasaction='ignore')
         writer.writerow(dict)
 
@@ -70,6 +72,7 @@ def registerMember(currentDetails):
         finalRow['Name'] = name.get()
         finalRow['Designation'] = designation.get()
         finalRow['Organization'] = organization.get()
+        finalRow['Address'] = address.get()
         finalRow['OnAccountof'] = oAcc.get()
         finalRow['PaymentMode'] = modex.get()
         finalRow['Amount'] = amount.get()
@@ -100,13 +103,18 @@ def registerMember(currentDetails):
     organization.insert(0, currentDetails['Organization'])
     organization.grid(row = 2, column = 1)
 
-    Label(frame, text='On account of: ').grid(row = 3, column = 0)
-    onAccof = OptionMenu(frame, oAcc, "Subscription - 2020", "Subscription - 2021", "Subscription - 2022", "Subscription - 2023", "Subscription - 2024", "Reimbursements for Meals", "Reimbursements for Stay", "Subscription - 2022 with Initiation", "Other")
-    onAccof.grid(row = 3, column = 1)
+    Label(frame, text='Address: ').grid(row = 3, column = 0)
+    address = Entry(frame)
+    address.insert(0, currentDetails['Address'])
+    organization.grid(row = 3, column = 1)
 
-    Label(frame, text='Mode of payment: ').grid(row = 4, column = 0)
+    Label(frame, text='On account of: ').grid(row = 4, column = 0)
+    onAccof = OptionMenu(frame, oAcc, "Subscription - 2020", "Subscription - 2021", "Subscription - 2022", "Subscription - 2023", "Subscription - 2024", "Reimbursements for Meals", "Reimbursements for Stay", "Subscription - 2022 with Initiation", "Other")
+    onAccof.grid(row = 4, column = 1)
+
+    Label(frame, text='Mode of payment: ').grid(row = 5, column = 0)
     o = OptionMenu(frame, modex, "NEFT", "Cash", "Cheque", "Card", "PayTM", "Other")
-    o.grid(row = 4, column=1)
+    o.grid(row = 5, column=1)
     # b1 = Radiobutton(frame, text='NEFT', command= lambda: modex.set('NEFT'))
     # b1.grid(row = 4, column = 1)
     # b2 = Radiobutton(frame, text='Cash', command= lambda: modex.set('Cash'))
@@ -116,21 +124,21 @@ def registerMember(currentDetails):
     # b4 = Radiobutton(frame, text='Card', command= lambda: modex.set('Card'))
     # b4.grid(row = 4, column = 4)
 
-    Label(frame, text='Amount: ').grid(row = 5, column = 0)
+    Label(frame, text='Amount: ').grid(row = 6, column = 0)
     amount = Entry(frame)
-    amount.grid(row = 5, column = 1)
+    amount.grid(row = 6, column = 1)
 
-    Label(frame, text='Contact: ').grid(row = 6, column = 0)
+    Label(frame, text='Contact: ').grid(row = 7, column = 0)
     contact = Entry(frame)
     contact.insert(0, currentDetails['Contact'])
-    contact.grid(row = 6, column = 1)
+    contact.grid(row = 7, column = 1)
 
-    Label(frame, text='Remarks: ').grid(row = 7, column = 0)
+    Label(frame, text='Remarks: ').grid(row = 8, column = 0)
     remarks = Entry(frame)
-    remarks.grid(row = 7, column = 1)
+    remarks.grid(row = 8, column = 1)
 
-    Button(frame, text="Submit", command= capturevalues).grid(row = 8, column = 0)
-    Button(frame, text="Quit", command= secondScreen.destroy).grid(row = 8, column = 1)
+    Button(frame, text="Submit", command= capturevalues).grid(row = 9, column = 0)
+    Button(frame, text="Quit", command= secondScreen.destroy).grid(row = 9, column = 1)
 
     frame.pack(expand=1)
     secondScreen.mainloop()
@@ -206,6 +214,7 @@ def isNotMember():
         finalRow['Name'] = name.get()
         finalRow['Designation'] = designation.get()
         finalRow['Organization'] = organization.get()
+        finalRow['Address'] = address.get()
         finalRow['OnAccountof'] = oAcc.get()
         finalRow['Payment Mode'] = modex.get()
         finalRow['Amount'] = amount.get()
@@ -228,17 +237,21 @@ def isNotMember():
     designation = Entry(frame)
     designation.grid(row = 1, column = 1)
 
-    Label(frame, text='Organization: ').grid(row = 2, column = 0)
+    Label(frame, text='Address: ').grid(row = 2, column = 0)
+    address = Entry(frame)
+    address.grid(row = 2, column = 1)
+
+    Label(frame, text='Organization: ').grid(row = 3, column = 0)
     organization = Entry(frame)
-    organization.grid(row = 2, column = 1)
+    organization.grid(row = 3, column = 1)
 
-    Label(frame, text='On account of: ').grid(row = 3, column = 0)
+    Label(frame, text='On account of: ').grid(row = 4, column = 0)
     onAccof = OptionMenu(frame, oAcc, "Subscription - 2020", "Subscription - 2021", "Subscription - 2022", "Subscription - 2023", "Subscription - 2024", "Reimbursements for Meals", "Reimbursements for Stay", "Subscription - 2022 with Initiation", "Other")
-    onAccof.grid(row = 3, column = 1)
+    onAccof.grid(row = 4, column = 1)
 
-    Label(frame, text='Mode of payment: ').grid(row = 4, column = 0)
+    Label(frame, text='Mode of payment: ').grid(row = 5, column = 0)
     o = OptionMenu(frame, modex, "NEFT", "Cash", "Cheque", "Card", "PayTM", "Other")
-    o.grid(row = 4, column=1)
+    o.grid(row = 5, column=1)
     # b1 = Radiobutton(frame, text='NEFT', command= lambda: modex.set('NEFT'))
     # b1.grid(row = 4, column = 1)
     # b2 = Radiobutton(frame, text='Cash', command= lambda: modex.set('Cash'))
@@ -248,20 +261,20 @@ def isNotMember():
     # b4 = Radiobutton(frame, text='Card', command= lambda: modex.set('Card'))
     # b4.grid(row = 4, column = 4)
 
-    Label(frame, text='Amount: ').grid(row = 5, column = 0)
+    Label(frame, text='Amount: ').grid(row = 6, column = 0)
     amount = Entry(frame)
-    amount.grid(row = 5, column = 1)
+    amount.grid(row = 6, column = 1)
 
-    Label(frame, text='Contact: ').grid(row = 6, column = 0)
+    Label(frame, text='Contact: ').grid(row = 7, column = 0)
     contact = Entry(frame)
-    contact.grid(row = 6, column = 1)
+    contact.grid(row = 7, column = 1)
 
-    Label(frame, text='Remarks: ').grid(row = 7, column = 0)
+    Label(frame, text='Remarks: ').grid(row = 8, column = 0)
     remarks = Entry(frame)
-    remarks.grid(row = 7, column = 1)
+    remarks.grid(row = 8, column = 1)
 
-    Button(frame, text="Submit", command= capturevalues).grid(row = 8, column = 0)
-    Button(frame, text="Quit", command= secondScreen.destroy).grid(row = 8, column = 1)
+    Button(frame, text="Submit", command= capturevalues).grid(row = 9, column = 0)
+    Button(frame, text="Quit", command= secondScreen.destroy).grid(row = 9, column = 1)
 
     frame.pack(expand=1)
     secondScreen.mainloop()
